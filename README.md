@@ -68,6 +68,15 @@
 
 - [SQL Practice — Northwind Database](sql-practice-northwind.md) — фильтрация данных, UNION, JOIN, добавление, изменение и удаление записей, агрегатные функции и группировка.
 
+
+### API Testing — SWAPI (Postman)
+
+Практическая работа по тестированию REST API на примере Star Wars API.
+
+- [SWAPI REST API Testing](api-testing/swapi-api-testing.md) — 9 практических заданий: GET-запросы, JSON Schema, пагинация, поиск персонажей и формат Wookiee.
+
+**Инструмент:** Postman.
+
 ## 📌 Практика и развитие
 
 Продолжаю развивать навыки тестирования REST API в Postman, написания SQL-запросов и подготовки тестовой документации.
