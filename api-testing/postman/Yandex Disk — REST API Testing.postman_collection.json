@@ -1,0 +1,555 @@
+{
+  "info": {
+    "_postman_id": "2bf45cb6-2e25-4d77-874a-8bf1ae7a2f66",
+    "name": "Yandex Disk — REST API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+ },
+  "item": [
+    {
+      "name": "01 — Get Disk Info",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Disk information contains required fields\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data).to.have.property(\"total_space\");\n    pm.expect(data).to.have.property(\"used_space\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 — Create Folder",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Response contains resource method\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data).to.have.property(\"method\");\n    pm.expect(data.method).to.eql(\"GET\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources?path=%2Fqa-api-test-2",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "%2Fqa-api-test-2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 — Upload File from PC",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Upload URL is present\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data).to.have.property(\"href\");\n    pm.expect(data.href).to.be.a(\"string\").and.not.empty;\n});\n\npm.test(\"Upload URL uses HTTPS\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data.href).to.match(/^https:\\/\\//);\n});\nconst data = pm.response.json();\npm.environment.set(\"upload_url\", data.href);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources/upload?path=qa-api-test-2/hello.txt",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources",
+            "upload"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "qa-api-test-2/hello.txt"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 — Upload File to Disk",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "file",
+          "file": {
+            "src": ""
+          }
+        },
+        "url": {
+          "raw": "{{upload_url}}",
+          "host": [
+            "{{upload_url}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 — Upload File from URL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 202\", function () {\n    pm.response.to.have.status(202);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Upload operation URL is present\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data).to.have.property(\"href\");\n    pm.expect(data.href).to.be.a(\"string\").and.not.empty;\n});\n\nconst data = pm.response.json();\npm.environment.set(\"upload_operation_url\", data.href);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources/upload?path=/qa-api-test-2/file-from-url.pdf&url=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources",
+            "upload"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "/qa-api-test-2/file-from-url.pdf"
+            },
+            {
+              "key": "url",
+              "value": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 — Check Upload Operation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Upload operation completed successfully\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data.status).to.eql(\"success\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{upload_operation_url}}",
+          "host": [
+            "{{upload_operation_url}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 — Move File",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Response contains resource information\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data).to.have.property(\"href\");\n    pm.expect(data).to.have.property(\"method\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources/move?from=/qa-api-test-2/hello.txt&path=/qa-api-test/moved-hello.txt",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources",
+            "move"
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "/qa-api-test-2/hello.txt"
+            },
+            {
+              "key": "path",
+              "value": "/qa-api-test/moved-hello.txt"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 — Verify Moved File",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"File name is correct\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data.name).to.eql(\"moved-hello.txt\");\n});\n\npm.test(\"File path is correct\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data.path).to.eql(\"disk:/qa-api-test/moved-hello.txt\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources?path=/qa-api-test/moved-hello.txt",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "/qa-api-test/moved-hello.txt"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 — Delete File",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {\n    pm.response.to.have.status(204);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources?path=/qa-api-test/moved-hello.txt",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "/qa-api-test/moved-hello.txt"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 — Verify File Deleted",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\n    pm.response.to.have.status(404);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources?path=/qa-api-test/moved-hello.txt",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "/qa-api-test/moved-hello.txt"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 — Restore File from Trash",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/trash/resources/restore?path=trash:/REPLACE_WITH_CURRENT_TRASH_PATH",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "trash",
+            "resources",
+            "restore"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "trash:/REPLACE_WITH_CURRENT_TRASH_PATH"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12 — Find File in Trash",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Trash response contains items\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data).to.have.property(\"_embedded\");\n    pm.expect(data._embedded).to.have.property(\"items\");\n    pm.expect(data._embedded.items).to.be.an(\"array\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/trash/resources",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "trash",
+            "resources"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13 — Verify Restored File",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Restored file name is correct\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data.name).to.eql(\"moved-hello.txt\");\n});\n\npm.test(\"Restored file path is correct\", function () {\n    const data = pm.response.json();\n\n    pm.expect(data.path).to.eql(\"disk:/qa-api-test/moved-hello.txt\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "OAuth {{oauth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "https://cloud-api.yandex.net/v1/disk/resources?path=/qa-api-test/moved-hello.txt",
+          "protocol": "https",
+          "host": [
+            "cloud-api",
+            "yandex",
+            "net"
+          ],
+          "path": [
+            "v1",
+            "disk",
+            "resources"
+          ],
+          "query": [
+            {
+              "key": "path",
+              "value": "/qa-api-test/moved-hello.txt"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
