@@ -74,8 +74,9 @@
 Практическая работа по тестированию REST API на примере Star Wars API.
 
 - [SWAPI REST API Testing](api-testing/swapi-api-testing.md) — 9 практических заданий: GET-запросы, JSON Schema, пагинация, поиск персонажей и формат Wookiee.
+- [Postman Collection](api-testing/postman/SWAPI%20%E2%80%94%20REST%20API%20Testing.postman_collection.json) — коллекция из 9 GET-запросов с автоматизированными проверками ответов API.
 
-  **Инструмент:** Postman.
+**Инструменты:** Postman, JavaScript.
   
 ### API Testing — Yandex Disk (Postman)
 
