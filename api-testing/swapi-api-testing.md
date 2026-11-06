@@ -52,6 +52,6 @@
 
 ## Postman Collection
 
-[SWAPI — REST API Testing](postman/SWAPI-REST%20API%20Testing.postman_collection.json)
+[SWAPI — REST API Testing](postman/SWAPI%20%E2%80%94%20REST%20API%20Testing.postman_collection.json)
 
 Коллекция содержит 9 GET-запросов с автоматизированными проверками ответов API.
