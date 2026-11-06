@@ -75,7 +75,16 @@
 
 - [SWAPI REST API Testing](api-testing/swapi-api-testing.md) — 9 практических заданий: GET-запросы, JSON Schema, пагинация, поиск персонажей и формат Wookiee.
 
-**Инструмент:** Postman.
+  **Инструмент:** Postman.
+  
+### API Testing — Yandex Disk (Postman)
+
+Практический проект по тестированию REST API облачного хранилища Яндекс Диск.
+
+- [Yandex Disk REST API Testing](api-testing/yandex-disk-api-testing.md) — 13 запросов: информация о диске, создание папки, загрузка, перемещение, удаление и восстановление файлов.
+- [Postman Collection](api-testing/postman/Yandex%20Disk%20—%20REST%20API%20Testing.postman_collection.json) — коллекция с автоматизированными проверками ответов API.
+
+**Инструменты:** Postman, JavaScript, Yandex Disk REST API.
 
 ## 📌 Практика и развитие
 
