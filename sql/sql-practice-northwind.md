@@ -28,7 +28,7 @@
 SELECT *
 FROM Suppliers
 WHERE City LIKE 'S%'
-AND NOT Country LIKE 'S%';
+AND Country NOT LIKE 'S%';
 ```
 
 ### 2.2. Объединение результатов выборок
@@ -122,11 +122,14 @@ WHERE Categories.CategoryID = 8;
 ### 4.3. Подсчёт позиций заказов по клиентам — старый синтаксис
 
 ```sql id="g7k2vp"
-SELECT Customers.ContactName, COUNT(OrderDetails.OrderID) AS Orders
+SELECT
+    Customers.CustomerID,
+    Customers.ContactName,
+    COUNT(OrderDetails.OrderID) AS OrderLinesCount
 FROM Customers, Orders, OrderDetails
 WHERE Customers.CustomerID = Orders.CustomerID
 AND Orders.OrderID = OrderDetails.OrderID
-GROUP BY Customers.ContactName
+GROUP BY Customers.CustomerID, Customers.ContactName;
 ```
 
 Запрос демонстрирует соединение таблиц, группировку и подсчёт строк с помощью `COUNT`.
@@ -134,11 +137,14 @@ GROUP BY Customers.ContactName
 ### 4.4. Та же задача с использованием INNER JOIN
 
 ```sql id="m4x8qd"
-SELECT Customers.ContactName, COUNT(OrderDetails.OrderID) AS Orders
+SELECT
+    Customers.CustomerID,
+    Customers.ContactName,
+    COUNT(OrderDetails.OrderID) AS OrderLinesCount
 FROM (Customers
 INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID)
 INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
-GROUP BY Customers.ContactName
+GROUP BY Customers.CustomerID, Customers.ContactName;
 ```
 
 `COUNT(OrderDetails.OrderID)` считает строки с позициями заказов, а не количество уникальных заказов.
@@ -148,11 +154,14 @@ GROUP BY Customers.ContactName
 ### 5.1. Топ-5 товаров по количеству продаж
 
 ```sql
-SELECT TOP 5 Products.ProductName, Products.ProductID, SUM(OrderDetails.Quantity) AS Quantity
+SELECT TOP 5
+    Products.ProductName,
+    Products.ProductID,
+    SUM(OrderDetails.Quantity) AS Quantity
 FROM Products
 INNER JOIN OrderDetails ON Products.ProductID = OrderDetails.ProductID
 GROUP BY Products.ProductName, Products.ProductID
-ORDER BY SUM(OrderDetails.Quantity) DESC
+ORDER BY Quantity DESC, Products.ProductID ASC;
 ```
 
 Используются `INNER JOIN`, `SUM`, `GROUP BY`, `ORDER BY` и `TOP 5`.
@@ -160,10 +169,12 @@ ORDER BY SUM(OrderDetails.Quantity) DESC
 ### 5.2. Подсчёт заказов по перевозчикам
 
 ```sql
-SELECT Shippers.ShipperName, COUNT(Orders.ShipperID) AS QuantityOrder
+SELECT
+    Shippers.ShipperName,
+    COUNT(Orders.ShipperID) AS OrderCount
 FROM Shippers
 INNER JOIN Orders ON Orders.ShipperID = Shippers.ShipperID
-GROUP BY Shippers.ShipperName
+GROUP BY Shippers.ShipperName;
 ```
 
 Запрос демонстрирует соединение таблиц `Shippers` и `Orders`, группировку и подсчёт связанных записей.
@@ -171,13 +182,16 @@ GROUP BY Shippers.ShipperName
 ### 5.3. Среднее значение суммы позиций заказов по клиентам
 
 ```sql
-SELECT Customers.ContactName, ROUND(AVG(OrderDetails.Quantity * Products.Price), 2) AS AverageSumma
+SELECT
+    Customers.CustomerID,
+    Customers.ContactName,
+    ROUND(AVG(OrderDetails.Quantity * Products.Price), 2) AS AverageLineAmount
 FROM ((Customers
 INNER JOIN Orders ON Customers.CustomerID = Orders.CustomerID)
 INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID)
 INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID
-GROUP BY Customers.ContactName
-HAVING ROUND(AVG(OrderDetails.Quantity * Products.Price), 2) >= 1000
+GROUP BY Customers.CustomerID, Customers.ContactName
+HAVING ROUND(AVG(OrderDetails.Quantity * Products.Price), 2) >= 1000;
 ```
 
 Используются `INNER JOIN`, `AVG`, `ROUND`, `GROUP BY` и `HAVING`.
@@ -199,7 +213,7 @@ HAVING ROUND(AVG(OrderDetails.Quantity * Products.Price), 2) >= 1000
 | UPDATE | Изменение записей |
 | DELETE | Удаление записей |
 | INNER JOIN | Соединение таблиц |
-| COUNT | Подсчёт записей |
+| COUNT | Подсчёт записей и связанных строк |
 | SUM | Суммирование |
 | AVG | Вычисление среднего |
 | GROUP BY | Группировка |
@@ -209,19 +223,23 @@ HAVING ROUND(AVG(OrderDetails.Quantity * Products.Price), 2) >= 1000
 
 ## 7. Применение SQL в тестировании
 
+SQL позволяет тестировщику проверять данные непосредственно в базе данных и контролировать результаты операций приложения.
+
 Полученные навыки можно применять для:
-- проверки наличия и корректности записей;
-- поиска данных по заданным условиям;
-- проверки связей между таблицами;
-- проверки результатов добавления, изменения и удаления данных;
-- подсчёта записей и сравнения агрегированных значений;
-- проверки данных, связанных с заказами и товарами.
+
+- проверки наличия и корректности записей в базе данных;
+- поиска записей по заданным условиям;
+- проверки связей между таблицами с помощью JOIN;
+- проверки результатов создания, изменения и удаления записей;
+- поиска повторяющихся и некорректных данных;
+- подсчёта записей и проверки агрегированных значений;
+- сверки данных между связанными таблицами, например клиентами, заказами и товарами.
+
+Представленные в проекте запросы демонстрируют базовые навыки работы с данными, которые могут использоваться при ручном тестировании приложений с базами данных.
 
 ## 8. Примечания
 
-- Запросы написаны с использованием синтаксиса Microsoft SQL Server (T-SQL).
-- Названия таблиц и полей сохранены в соответствии с исходными учебными запросами.
-- В разных версиях Northwind названия некоторых таблиц и столбцов могут отличаться. Например, в некоторых вариантах таблица позиций заказа называется `Order Details`, а не `OrderDetails`.
+- Запросы написаны с использованием синтаксиса Microsoft SQL Server (T-SQL). Названия таблиц и полей соответствуют использованному учебному примеру Northwind и могут отличаться в других версиях базы данных.
 - Изменяющие данные запросы следует выполнять только в учебной копии базы данных.
 - Перед удалением или изменением записей рекомендуется предварительно проверить результат соответствующим `SELECT`-запросом.
 - `TOP 5` — конструкция T-SQL для ограничения количества возвращаемых строк.
