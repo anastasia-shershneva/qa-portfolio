@@ -64,10 +64,9 @@
 
 ### SQL — работа с базой данных Northwind
 
-Практические SQL-запросы для работы с учебной базой данных Northwind.
+Практические SQL-запросы для работы с учебной базой данных Northwind и проверки данных в контексте тестирования.
 
-- [SQL Practice — Northwind Database](sql-practice-northwind.md) — фильтрация данных, UNION, JOIN, добавление, изменение и удаление записей, агрегатные функции и группировка.
-
+- [SQL Practice — Northwind Database](sql-practice-northwind.md) — фильтрация и поиск данных, UNION, JOIN, добавление, изменение и удаление записей, агрегатные функции, группировка и проверка целостности данных.
 
 ### API Testing — SWAPI (Postman)
 
