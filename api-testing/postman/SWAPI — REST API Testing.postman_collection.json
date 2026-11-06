@@ -1,0 +1,333 @@
+{
+  "info": {
+    "_postman_id": "151cf680-9385-454e-9a69-18feab6742a8",
+    "name": "SWAPI — REST API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59999466",
+    "_collection_link": "https://go.postman.co/collection/59999466-151cf680-9385-454e-9a69-18feab6742a8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "01 — Get All Endpoints",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Response contains people endpoint\", function () {\n    const jsonData = pm.response.json();\n    pm.expect(jsonData).to.have.property(\"people\");\n});\n\npm.test(\"Response contains starships endpoint\", function () {\n    const jsonData = pm.response.json();\n    pm.expect(jsonData).to.have.property(\"starships\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 — Get All People",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Count is 87\", function () {\n    const data = pm.response.json();\n    pm.expect(data.count).to.eql(87);\n});\n\npm.test(\"Results is an array\", function () {\n    const data = pm.response.json();\n    pm.expect(data.results).to.be.an(\"array\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 — Get People Schema",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Schema contains properties\", function () {\n    const data = pm.response.json();\n    pm.expect(data).to.have.property(\"properties\");\n});\n\npm.test(\"Schema describes name field\", function () {\n    const data = pm.response.json();\n    pm.expect(data.properties).to.have.property(\"name\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/schema",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            "schema"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 — Get People Page 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Count is 87\", function () {\n    const data = pm.response.json();\n    pm.expect(data.count).to.eql(87);\n});\n\npm.test(\"Next page URL exists\", function () {\n    const data = pm.response.json();\n    pm.expect(data.next).to.be.a(\"string\");\n});\n\npm.test(\"Results is an array\", function () {\n    const data = pm.response.json();\n    pm.expect(data.results).to.be.an(\"array\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/?page=2",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            ""
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 — Get Starships Endpoint",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response contains starships\", function () {\n    const data = pm.response.json();\n    pm.expect(data).to.have.property(\"starships\");\n});\n\npm.test(\"Starships is a valid URL\", function () {\n    const data = pm.response.json();\n    pm.expect(data.starships).to.eql(\n        \"https://swapi.py4e.com/api/starships/\"\n    );\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 — Get Han Solo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Character is Han Solo\", function () {\n    const data = pm.response.json();\n    pm.expect(data.name).to.eql(\"Han Solo\");\n});\n\npm.test(\"Character ID is 14\", function () {\n    const data = pm.response.json();\n    pm.expect(data.url).to.include(\"/people/14/\");\n});\n\npm.test(\"Han Solo has two starships\", function () {\n    const data = pm.response.json();\n    pm.expect(data.starships).to.have.lengthOf(2);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/14/",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            "14",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 — Get Han Solo Wookiee",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Wookiee name field exists\", function () {\n    const data = pm.response.json();\n    pm.expect(data).to.have.property(\"whrascwo\");\n});\n\npm.test(\"Wookiee URL field exists\", function () {\n    const data = pm.response.json();\n    pm.expect(data).to.have.property(\"hurcan\");\n});\n\npm.test(\"Wookiee URL contains character ID 14\", function () {\n    const data = pm.response.json();\n    pm.expect(data.hurcan).to.include(\"/14/\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/14/?format=wookiee",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            "14",
+            ""
+          ],
+          "query": [
+            {
+              "key": "format",
+              "value": "wookiee"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 — Check Wookiee URL Field",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Wookiee URL field exists\", function () {\n    const data = pm.response.json();\n    pm.expect(data).to.have.property(\"hurcan\");\n});\n\npm.test(\"Wookiee URL contains character ID 14\", function () {\n    const data = pm.response.json();\n    pm.expect(data.hurcan).to.include(\"/14/\");\n});\n\npm.test(\"Wookiee URL uses transformed protocol\", function () {\n    const data = pm.response.json();\n    pm.expect(data.hurcan).to.include(\"acaoaoakc://\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/14/?format=wookiee",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            "14",
+            ""
+          ],
+          "query": [
+            {
+              "key": "format",
+              "value": "wookiee"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 — Search Obi-Wan Kenobi",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Search returns one result\", function () {\n    const data = pm.response.json();\n    pm.expect(data.count).to.eql(1);\n});\n\npm.test(\"Found character is Obi-Wan Kenobi\", function () {\n    const data = pm.response.json();\n    pm.expect(data.results[0].name).to.eql(\"Obi-Wan Kenobi\");\n});\n\npm.test(\"Character ID is 10\", function () {\n    const data = pm.response.json();\n    pm.expect(data.results[0].url).to.include(\"/people/10/\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://swapi.py4e.com/api/people/?search=Obi-Wan%20Kenobi",
+          "protocol": "https",
+          "host": [
+            "swapi",
+            "py4e",
+            "com"
+          ],
+          "path": [
+            "api",
+            "people",
+            ""
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "Obi-Wan%20Kenobi"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
