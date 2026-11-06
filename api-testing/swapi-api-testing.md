@@ -164,6 +164,6 @@ https://swapi.py4e.com/api/people/?search=Obi-Wan%20Kenobi
 **Проект выполнен в рамках учебной практики по тестированию REST API.**
 ## Postman Collection
 
-[SWAPI — REST API Testing](postman/SWAPI-REST%20API%20Testing.postman_collection.json)
+[SWAPI — REST API Testing](postman/SWAPI%20%E2%80%94%20REST%20API%20Testing.postman_collection.json)
 
 Коллекция Postman содержит 9 GET-запросов и автоматизированные проверки ответов API.
